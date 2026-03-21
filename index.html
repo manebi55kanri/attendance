@@ -1,7 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+<script>
+QrScanner.WORKER_PATH = "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner-worker.min.js";
+</script>
+
+<style>
+body {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+button {
+  padding: 15px;
+  margin: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+}
+
+#enter {
+  background-color: #a5d6a7; /* 緑 */
+  color: black;
+}
+
+#exit {
+  background-color: #ef9a9a; /* 赤 */
+  color: black;
+}
+
+#video {
+  width: 300px;
+  margin-top: 20px;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>入退室管理</h1>
+
+<button id="enter" onclick="setMode('入室')">入室</button>
+<button id="exit" onclick="setMode('退室')">退室</button>
+
+<h2 id="mode">モード未選択</h2>
+
+<video id="video" autoplay playsinline></video>
+
+<div id="result"></div>
+
+<script>
+let currentMode = "";
+
+function setMode(mode){
+  currentMode = mode;
+  document.getElementById("mode").innerText = mode + "モード";
+}
+
+const video = document.getElementById('video');
+
 const scanner = new QrScanner(video, result => {
 
   if(!currentMode){
-    alert("先に入室か退室を選択して");
+    alert("先に選択して");
     return;
   }
 
@@ -19,8 +89,13 @@ const scanner = new QrScanner(video, result => {
     document.getElementById("result").innerText = text;
   })
   .catch(err => {
-    document.getElementById("result").innerText = "エラー発生";
-    console.error(err);
+    document.getElementById("result").innerText = "エラー";
   });
 
 });
+
+scanner.start();
+</script>
+
+</body>
+</html>
