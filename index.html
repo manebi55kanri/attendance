@@ -1,30 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
-<script>
-QrScanner.WORKER_PATH = "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner-worker.min.js";
-</script>
-
-</head>
-
-<body style="text-align:center;">
-
-<h1>QRテスト</h1>
-
-<video id="video" autoplay playsinline style="width:300px;"></video>
-
-<script>
-const video = document.getElementById('video');
-
 const scanner = new QrScanner(video, result => {
-  alert("読み取った: " + result.data);
+
+  if(!currentMode){
+    alert("先に入室か退室を選択して");
+    return;
+  }
+
+  document.getElementById("result").innerText = "送信中...";
+
+  fetch("ここにGASのURL", {
+    method: "POST",
+    body: JSON.stringify({
+      id: result.data,
+      mode: currentMode
+    })
+  })
+  .then(res => res.text())
+  .then(text => {
+    document.getElementById("result").innerText = text;
+  })
+  .catch(err => {
+    document.getElementById("result").innerText = "エラー発生";
+    console.error(err);
+  });
+
 });
-
-scanner.start();
-</script>
-
-</body>
-</html>
