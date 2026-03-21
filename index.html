@@ -13,7 +13,7 @@ const scanner = new QrScanner(video, result => {
 
   document.getElementById("result").innerText = "送信中...";
 
-  fetch("GASのURL", {
+  fetch("https://script.google.com/macros/s/AKfycbygDTh-zOfTREpq9O0rCyMu6ap1lEvEXhSMwXAmR3qSsjvicv6puivOR_9R8OGh7Hejkw/exec", {
     method: "POST",
     body: JSON.stringify({
       id: result.data,
