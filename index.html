@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+
+<script>
+QrScanner.WORKER_PATH = "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner-worker.min.js";
+</script>
+</head>
+
+<body style="text-align:center; font-family:sans-serif;">
+
+<h1>入退室管理</h1>
+
+<button onclick="setMode('入室')" style="background:#a5d6a7; padding:15px;">入室</button>
+<button onclick="setMode('退室')" style="background:#ef9a9a; padding:15px;">退室</button>
+
+<h2 id="mode">未選択</h2>
+
+<video id="video" autoplay playsinline style="width:300px;"></video>
+
+<h2 id="result"></h2>
+
+<script>
+let currentMode = "";
+
+function setMode(mode){
+  currentMode = mode;
+  document.getElementById("mode").innerText = mode + "モード";
+}
+
+const video = document.getElementById('video');
+
+const scanner = new QrScanner(video, result => {
+  if(!currentMode){
+    alert("先に選択して");
+    return;
+  }
+
+  document.getElementById("result").innerText = "送信中...";
+
+  fetch("ここにGASのURL", {
+    method: "POST",
+    body: JSON.stringify({
+      id: result.data,
+      mode: currentMode
+    })
+  }).then(res => res.text())
+    .then(text => {
+      document.getElementById("result").innerText = text;
+    });
+});
+
+scanner.start();
+</script>
+
+</body>
+</html>
